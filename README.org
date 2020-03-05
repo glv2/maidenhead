@@ -1,0 +1,58 @@
+#+TITLE: maidenhead
+
+This is a Common Lisp library to convert coordinates between Latitude/Longitude
+and Maidenhead locator system.
+
+* API
+
+In the library, latitude and longitude are represented by real numbers
+(degrees), positive for northern latitude and eastern longitudes, and negative
+for southern latitude and western longitudes.
+
+
+#+BEGIN_SRC lisp
+(lat/lon->maidenhead latitude longitude) -> string
+#+END_SRC
+
+Return the Maidenhead locator for the given /latitude/ and /longitude/.
+
+
+#+BEGIN_SRC lisp
+(maidenhead->lat/lon locator) -> list
+#+END_SRC
+
+Return the latitude and longitude for the southwest corner of the given
+Maidenhead /locator/ square.
+
+* Examples
+
+Load the library:
+
+#+BEGIN_SRC lisp
+> (asdf:load-system "maidenhead")
+...
+#+END_SRC
+
+
+Get the Maidenhead locator of Munich:
+
+#+BEGIN_SRC lisp
+> (maidenhead:lat/lon->maidenhead 48.14666 11.60833)
+"JN58td25"
+#+END_SRC
+
+
+Get back the latitude and longitude of Munich:
+
+#+BEGIN_SRC lisp
+> (maidenhead:maidenhead->lat/lon "JN58td25")
+(48.14583333333334d0 11.599999999999994d0)
+#+END_SRC
+
+* Tests
+
+The tests require the /fiveam/ library.
+
+#+BEGIN_SRC lisp
+(asdf:test-system "maidenhead")
+#+END_SRC
