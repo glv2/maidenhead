@@ -2,7 +2,7 @@
 Convert geographic coordinates between Latitude/Longitude and Maidenhead
 locator system.
 
-Copyright 2020 Guillaume Le Vaillant
+Copyright 2020-2022 Guillaume Le Vaillant
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -52,18 +52,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                           extsquare-x
                           extsquare-y))))))))))
 
-(defun maidenhead->lat/lon (locator)
+(defun maidenhead->lat/lon (locator &optional center-p)
   "Return the latitude and longitude for the southwest corner of the given
-Maidenhead LOCATOR square."
+Maidenhead LOCATOR square, or the center of the square if CENTER-P is not NIL."
   (check-type locator string)
   (let* ((field-letters (load-time-value "ABCDEFGHIJKLMNOPQR" t))
          (subsquare-letters (load-time-value "abcdefghijklmnopqrstuvwx" t))
-         (locator (case (length locator)
-                    ((8) locator)
-                    ((6) (concatenate 'string locator "00"))
-                    ((4) (concatenate 'string locator "aa00"))
-                    ((2) (concatenate 'string locator "00aa00"))
-                    (t (error "Invalid locator: ~a" locator))))
+         (locator (if center-p
+                      (case (length locator)
+                        ((8) locator)
+                        ((6) (concatenate 'string locator "55"))
+                        ((4) (concatenate 'string locator "mm55"))
+                        ((2) (concatenate 'string locator "55mm55"))
+                        (t (error "Invalid locator: ~a" locator)))
+                      (case (length locator)
+                        ((8) locator)
+                        ((6) (concatenate 'string locator "00"))
+                        ((4) (concatenate 'string locator "aa00"))
+                        ((2) (concatenate 'string locator "00aa00"))
+                        (t (error "Invalid locator: ~a" locator)))))
          (field-x (position (char locator 0) field-letters
                             :test #'char-equal))
          (field-y (position (char locator 1) field-letters
@@ -86,5 +93,7 @@ Maidenhead LOCATOR square."
               (latitude (- (+ (* field-y 10) square-y
                               (/ subsquare-y 24) (/ extsquare-y 240))
                            90.0d0)))
-          (list latitude longitude))
+          (if center-p
+              (list (+ latitude 1/480) (+ longitude 1/240))
+              (list latitude longitude)))
         (error "Invalid locator: ~a" locator))))

@@ -2,7 +2,7 @@
 Convert geographic coordinates between Latitude/Longitude and Maidenhead
 locator system.
 
-Copyright 2020 Guillaume LE VAILLANT
+Copyright 2020-2022 Guillaume LE VAILLANT
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -52,6 +52,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
           (destructuring-bind (latitude longitude) (first data)
             (let ((locator (second data)))
               (destructuring-bind (lat lon) (maidenhead->lat/lon locator)
+                (is (close-enough latitude lat))
+                (is (close-enough longitude lon))))))
+        *maidenhead-data*)
+  (mapc (lambda (data)
+          (destructuring-bind (latitude longitude) (first data)
+            (let ((locator (second data)))
+              (destructuring-bind (lat lon) (maidenhead->lat/lon locator t)
                 (is (close-enough latitude lat))
                 (is (close-enough longitude lon))))))
         *maidenhead-data*))

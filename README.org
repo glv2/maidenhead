@@ -18,11 +18,12 @@ Return the Maidenhead locator for the given /latitude/ and /longitude/.
 
 
 #+BEGIN_SRC lisp
-(maidenhead->lat/lon locator) -> list
+(maidenhead->lat/lon locator &optional center-p) -> list
 #+END_SRC
 
 Return the latitude and longitude for the southwest corner of the given
-Maidenhead /locator/ square.
+Maidenhead /locator/ square, or the center of the square if /center-p/ is
+not ~nil~.
 
 * Examples
 
@@ -45,8 +46,8 @@ Get the Maidenhead locator of Munich:
 Get back the latitude and longitude of Munich:
 
 #+BEGIN_SRC lisp
-> (maidenhead:maidenhead->lat/lon "JN58td25")
-(48.14583333333334d0 11.599999999999994d0)
+> (maidenhead:maidenhead->lat/lon "JN58td25" t)
+(48.147916666666674d0 11.60416666666666d0)
 #+END_SRC
 
 * Tests
