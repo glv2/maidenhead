@@ -1,5 +1,7 @@
 #+TITLE: maidenhead
 
+The active repository is at https://codeberg.org/glv/maidenhead
+
 This is a Common Lisp library to convert coordinates between Latitude/Longitude
 and Maidenhead locator system.
 
